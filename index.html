@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Shadow HQ">
+<title>Shadow HQ · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#040810;--surface:#070d1a;--panel:#0a1220;
+  --border:#0d2a4a;--glow:#1a5a8a;
+  --blue:#00b4ff;--blue-d:rgba(0,180,255,0.1);
+  --green:#00ff88;--green-d:rgba(0,255,136,0.1);
+  --amber:#ffb800;--amber-d:rgba(255,184,0,0.1);
+  --red:#ff3a3a;--red-d:rgba(255,58,58,0.1);
+  --purple:#9966ff;--purple-d:rgba(153,102,255,0.1);
+  --text:#c8dff0;--muted:#4a6a8a;
+  --font:'Rajdhani',sans-serif;--mono:'Share Tech Mono',monospace;
+}
+html,body{background:var(--bg);font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,10,30,0.15) 3px,rgba(0,10,30,0.15) 4px);pointer-events:none;z-index:999;}
+
+#notif{position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--panel);border:1px solid var(--blue);padding:8px 16px;z-index:9999;min-width:260px;max-width:92vw;text-align:center;transition:transform 0.3s ease;box-shadow:0 0 20px rgba(0,180,255,0.25);}
+#notif.show{transform:translateX(-50%) translateY(0);}
+.n-head{font-size:11px;font-weight:700;letter-spacing:0.2em;color:var(--blue);margin-bottom:4px;}
+.n-line{height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);margin-bottom:5px;}
+.n-body{font-family:var(--mono);font-size:10px;color:var(--text);}
+
+.dashboard{max-width:480px;margin:0 auto;padding:10px 10px 90px;}
+
+.hdr{border:1px solid var(--glow);background:var(--panel);padding:12px 14px;margin-bottom:10px;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);animation:scanh 3s linear infinite;}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;}
+.pname{font-size:20px;font-weight:700;letter-spacing:0.1em;color:#fff;text-shadow:0 0 18px rgba(0,180,255,0.6);}
+.prank{font-family:var(--mono);font-size:9px;color:var(--blue);letter-spacing:0.1em;margin-top:2px;}
+.hdr-r{text-align:right;}
+.hdr-date{font-family:var(--mono);font-size:8px;color:var(--muted);}
+.hdr-status{font-family:var(--mono);font-size:8px;color:var(--green);margin-top:2px;}
+.sdot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:3px;animation:pulse 2s ease-in-out infinite;}
+
+.tabs{display:flex;gap:0;margin-bottom:10px;border:1px solid var(--border);overflow:hidden;}
+.tab{flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;background:var(--surface);color:var(--muted);border:none;transition:all 0.15s;font-family:var(--font);border-right:1px solid var(--border);}
+.tab:last-child{border-right:none;}
+.tab.active{background:var(--blue-d);color:var(--blue);border-bottom:2px solid var(--blue);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+.mode-bar{display:flex;gap:6px;justify-content:flex-end;margin-bottom:10px;}
+.mbtn{background:transparent;border:1px solid var(--glow);color:var(--muted);font-family:var(--font);font-weight:700;font-size:10px;letter-spacing:0.1em;padding:5px 12px;cursor:pointer;text-transform:uppercase;transition:all 0.15s;}
+.mbtn.active{border-color:var(--blue);color:var(--blue);background:var(--blue-d);}
+
+.panel{background:var(--panel);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:8px;}
+.panel::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--glow),transparent);opacity:0.5;}
+.ph{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.25);}
+.pi{font-size:15px;line-height:1;}
+.pt{font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;}
+.pt.blue{color:var(--blue);}.pt.green{color:var(--green);}.pt.amber{color:var(--amber);}.pt.purple{color:var(--purple);}
+.pb{padding:10px 12px;}
+
+.sdiv{display:flex;align-items:center;gap:8px;margin:12px 0 8px;}
+.sdl{flex:1;height:1px;background:linear-gradient(90deg,var(--glow),transparent);}
+.sdr{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--glow));}
+.sdt{font-family:var(--mono);font-size:8px;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;white-space:nowrap;}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+.srow{margin-bottom:8px;}
+.slabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.sname{font-size:10px;font-weight:600;letter-spacing:0.08em;}
+.sval{font-family:var(--mono);font-size:10px;}
+.sval.blue{color:var(--blue);}.sval.green{color:var(--green);}.sval.amber{color:var(--amber);}.sval.purple{color:var(--purple);}
+.btrack{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
+.bfill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+.bfill.blue{background:linear-gradient(90deg,#004488,var(--blue));}
+.bfill.green{background:linear-gradient(90deg,#004422,var(--green));}
+.bfill.amber{background:linear-gradient(90deg,#664400,var(--amber));}
+.bfill.purple{background:linear-gradient(90deg,#220055,var(--purple));}
+
+.ez{margin-top:8px;}
+.ez.hidden{display:none;}
+.erow{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px;}
+.sinput{background:rgba(0,15,40,0.9);border:1px solid var(--glow);color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 8px;outline:none;-webkit-appearance:none;width:85px;}
+.sinput:focus{border-color:var(--blue);}
+.sbtn{background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:var(--font);font-weight:700;font-size:10px;letter-spacing:0.08em;padding:5px 10px;cursor:pointer;text-transform:uppercase;transition:all 0.15s;-webkit-appearance:none;white-space:nowrap;}
+.sbtn:active{transform:scale(0.95);}
+.sbtn.green{border-color:var(--green);color:var(--green);}
+.sbtn.amber{border-color:var(--amber);color:var(--amber);}
+.sbtn.purple{border-color:var(--purple);color:var(--purple);}
+.sbtn.muted{border-color:var(--muted);color:var(--muted);}
+
+.cig-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0;}
+.cdot{width:32px;height:32px;border-radius:4px;border:1px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s;}
+.cdot.lit{border-color:var(--amber);background:var(--amber-d);}
+.cdot.over{border-color:var(--red);background:var(--red-d);}
+.cstatus{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-align:center;margin-bottom:4px;}
+.cgoal{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:center;}
+.cact{display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
+
+.wc{margin-top:8px;}
+.wc-label{font-size:8px;color:var(--muted);letter-spacing:0.1em;margin-bottom:5px;}
+.wc-bars{display:flex;gap:3px;align-items:flex-end;height:40px;}
+.wc-col{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
+.wc-bar{width:100%;background:var(--green-d);border-top:2px solid var(--green);min-height:3px;}
+.wc-day{font-family:var(--mono);font-size:7px;color:var(--muted);}
+.wc-v{font-family:var(--mono);font-size:7px;color:var(--green);}
+.wc-empty{font-family:var(--mono);font-size:8px;color:var(--muted);}
+
+.gym-st{display:flex;gap:5px;margin-top:8px;}
+.gstat{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--border);padding:6px 4px;text-align:center;}
+.gstat-l{font-size:7px;color:var(--muted);letter-spacing:0.06em;margin-bottom:2px;}
+.gstat-v{font-family:var(--mono);font-size:15px;}
+
+.manga-big{text-align:center;padding:4px 0;}
+.manga-n{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--blue);text-shadow:0 0 16px rgba(0,180,255,0.4);line-height:1;}
+.manga-s{font-size:8px;color:var(--muted);letter-spacing:0.1em;margin-top:3px;}
+
+.iitem{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.iitem:last-child{border:none;}
+.ileft{display:flex;align-items:center;gap:7px;}
+.iicon{font-size:14px;}
+.ilabel{font-size:12px;font-weight:600;letter-spacing:0.03em;}
+.inote{font-size:8px;color:var(--muted);margin-top:1px;}
+.iamt{font-family:var(--mono);font-size:12px;font-weight:600;}
+.itotal{display:flex;justify-content:space-between;align-items:center;padding:8px 0 0;margin-top:5px;border-top:1px solid var(--glow);}
+.itlbl{font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;}
+.itval{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green);text-shadow:0 0 10px rgba(0,255,136,0.3);}
+
+.rblocks{display:flex;gap:6px;margin-bottom:8px;}
+.rb{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--border);padding:7px 8px;}
+.rb-l{font-size:7px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
+.rb-v{font-family:var(--mono);font-size:13px;font-weight:600;}
+.rb-s{font-size:7px;color:var(--muted);margin-top:1px;}
+
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.gitem{display:flex;align-items:center;gap:6px;padding:8px 8px;background:rgba(0,0,0,0.2);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;-webkit-user-select:none;user-select:none;}
+.gitem:active{transform:scale(0.97);}
+.gitem.done{border-color:rgba(0,255,136,0.25);background:rgba(0,255,136,0.04);}
+.gcheck{width:12px;height:12px;border:1px solid var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;transition:all 0.2s;}
+.gcheck.done{border-color:var(--green);color:var(--green);}
+.gicon{font-size:13px;}
+.gwrap{flex:1;min-width:0;}
+.gtxt{font-size:11px;font-weight:600;letter-spacing:0.02em;}
+.gtxt.done{color:var(--muted);text-decoration:line-through;}
+.gsub{font-size:8px;color:var(--muted);}
+
+/* MEDIA */
+.media-tabs{display:flex;gap:0;margin-bottom:8px;border:1px solid var(--border);overflow:hidden;}
+.mtab{flex:1;padding:7px 4px;text-align:center;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;background:var(--surface);color:var(--muted);border:none;transition:all 0.15s;font-family:var(--font);border-right:1px solid var(--border);}
+.mtab:last-child{border-right:none;}
+.mtab.active{background:var(--purple-d);color:var(--purple);border-bottom:2px solid var(--purple);}
+.mcontent{display:none;}
+.mcontent.active{display:block;}
+
+.media-list{display:flex;flex-direction:column;gap:4px;}
+.mitem{display:flex;align-items:center;gap:10px;padding:9px 10px;background:rgba(0,0,0,0.2);border:1px solid var(--border);}
+.mitem-icon{font-size:17px;flex-shrink:0;}
+.mitem-info{flex:1;min-width:0;}
+.mitem-title{font-size:13px;font-weight:700;letter-spacing:0.03em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mitem-sub{font-size:8px;color:var(--muted);margin-top:1px;}
+.mitem-score{font-family:var(--mono);font-size:18px;font-weight:700;flex-shrink:0;min-width:32px;text-align:right;}
+.sg{color:var(--green);}.sb{color:var(--blue);}.sa{color:var(--amber);}.sr{color:var(--red);}.sn{color:var(--muted);}
+
+.add-media{background:rgba(0,0,0,0.2);border:1px solid var(--border);padding:10px 12px;margin-top:8px;}
+.add-title{font-size:9px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;}
+.add-fields{display:flex;flex-direction:column;gap:6px;}
+.add-row{display:flex;gap:5px;}
+.sinput-full{background:rgba(0,15,40,0.9);border:1px solid var(--glow);color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 8px;outline:none;-webkit-appearance:none;flex:1;min-width:0;}
+.sinput-full:focus{border-color:var(--blue);}
+.sinput-sm{background:rgba(0,15,40,0.9);border:1px solid var(--glow);color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 8px;outline:none;-webkit-appearance:none;width:70px;}
+
+/* TRAVEL */
+.travel-stats{display:flex;gap:8px;margin-bottom:10px;}
+.tstat{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--glow);padding:10px 8px;text-align:center;}
+.tstat-n{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--blue);text-shadow:0 0 12px rgba(0,180,255,0.4);}
+.tstat-l{font-size:8px;color:var(--muted);letter-spacing:0.12em;margin-top:2px;}
+
+.titem{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.titem:last-child{border:none;}
+.titem-flag{font-size:18px;flex-shrink:0;}
+.titem-info{flex:1;}
+.titem-place{font-size:13px;font-weight:700;letter-spacing:0.03em;}
+.titem-dates{font-size:8px;color:var(--muted);margin-top:1px;}
+.titem-check{font-size:11px;color:var(--green);}
+
+.wl-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.wl-item:last-child{border:none;}
+.wl-flag{font-size:15px;}
+.wl-place{font-size:12px;font-weight:600;color:var(--muted);}
+
+.footer{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:center;padding:12px 0 6px;letter-spacing:0.14em;}
+
+
+.renda-val.hidden{filter:blur(4px);user-select:none;pointer-events:none;}
+.job-card{background:rgba(0,0,0,0.2);border:1px solid var(--border);padding:10px 12px;margin-bottom:6px;}
+.job-card:hover{border-color:var(--glow);}
+.job-title{font-size:13px;font-weight:700;letter-spacing:0.04em;color:var(--text);margin-bottom:3px;}
+.job-company{font-size:11px;color:var(--blue);margin-bottom:2px;}
+.job-meta{font-size:9px;color:var(--muted);font-family:var(--mono);}
+.job-tag{display:inline-block;font-size:8px;padding:2px 6px;border-radius:2px;background:var(--green-d);color:var(--green);border:1px solid rgba(0,255,136,0.2);margin-right:4px;margin-top:4px;}
+.job-tag.remote{background:var(--amber-d);color:var(--amber);border-color:rgba(255,184,0,0.2);}
+.job-search-btn{width:100%;padding:10px;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:var(--font);font-weight:700;font-size:12px;letter-spacing:0.14em;cursor:pointer;text-transform:uppercase;transition:all 0.2s;margin-bottom:10px;}
+.job-search-btn:active{transform:scale(0.98);}
+.job-search-btn:hover{background:var(--blue-d);}
+.job-search-btn:disabled{color:var(--muted);border-color:var(--muted);cursor:default;}
+.job-loading{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);padding:20px;letter-spacing:0.1em;}
+.job-link{display:block;font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:5px;text-decoration:none;word-break:break-all;}
+.job-link:hover{color:var(--blue);}
+.jobs-meta{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:right;margin-bottom:8px;letter-spacing:0.08em;}
+
+@keyframes scanh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.panel{animation:fadeIn 0.4s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="notif">
+  <div class="n-head">⚠ NOTIFICATION</div>
+  <div class="n-line"></div>
+  <div class="n-body" id="nbody"></div>
+</div>
+
+<div class="dashboard">
+
+<div class="hdr">
+  <div class="hdr-row">
+    <div>
+      <div class="pname">THIAGO MARGEM</div>
+      <div class="prank">[ SHADOW MONARCH ] · RANK S · 2026</div>
+    </div>
+    <div class="hdr-r">
+      <div class="hdr-date" id="sys-date"></div>
+      <div class="hdr-status"><span class="sdot"></span>ONLINE</div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('status',this)">⚡ Status</button>
+  <button class="tab" onclick="switchTab('media',this)">🎮 Mídia</button>
+  <button class="tab" onclick="switchTab('travel',this)">✈️ Viagens</button>
+  <button class="tab" onclick="switchTab('jobs',this)">💼 Emprego</button>
+</div>
+
+<!-- STATUS TAB -->
+<div id="tab-status" class="tab-content active">
+  <div class="mode-bar">
+    <button class="mbtn active" id="btn-edit" onclick="setMode('edit')">◈ Editar</button>
+    <button class="mbtn" id="btn-view" onclick="setMode('view')">◉ Ver</button>
+  </div>
+
+  <div class="sdiv"><div class="sdl"></div><div class="sdt">// físico</div><div class="sdr"></div></div>
+  <div class="g2">
+    <div class="panel">
+      <div class="ph"><div class="pi">⚖️</div><div class="pt green">Peso</div></div>
+      <div class="pb">
+        <div class="srow">
+          <div class="slabel"><span class="sname">ATUAL</span><span class="sval green" id="peso-d">62,5 kg</span></div>
+          <div class="btrack"><div class="bfill green" id="peso-b" style="width:25%"></div></div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="peso-s">5,5 kg acima da meta</div>
+        </div>
+        <div class="wc">
+          <div class="wc-label">ÚLTIMOS 7 DIAS</div>
+          <div class="wc-bars" id="wc-bars"><span class="wc-empty">aguardando registros</span></div>
+        </div>
+        <div class="ez" id="ez-peso">
+          <div class="erow"><input class="sinput" id="i-peso" type="number" step="0.01" placeholder="62.48"><button class="sbtn green" onclick="logPeso()">Registrar</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="pi">🏋️</div><div class="pt purple">Academia</div></div>
+      <div class="pb">
+        <div class="srow">
+          <div class="slabel"><span class="sname">2026</span><span class="sval purple" id="gym-d">0/150</span></div>
+          <div class="btrack"><div class="bfill purple" id="gym-b" style="width:0%"></div></div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="gym-p">0% da meta</div>
+        </div>
+        <div class="gym-st">
+          <div class="gstat"><div class="gstat-l">MÊS</div><div class="gstat-v purple" id="gym-mes">0</div></div>
+          <div class="gstat"><div class="gstat-l">SEM</div><div class="gstat-v purple" id="gym-sem">0</div></div>
+          <div class="gstat"><div class="gstat-l">FALTAM</div><div class="gstat-v" style="color:var(--muted)" id="gym-falt">150</div></div>
+        </div>
+        <div class="ez" id="ez-gym">
+          <div class="erow"><input class="sinput" id="i-gym" type="number" value="0" placeholder="total"><button class="sbtn purple" onclick="updateGym()">Salvar</button><button class="sbtn purple" onclick="addGym()">+1</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ph"><div class="pi">🚬</div><div class="pt amber">Cigarros</div></div>
+      <div class="pb">
+        <div class="cstatus" id="cig-st"></div>
+        <div class="cig-dots" id="cig-dots"></div>
+        <div class="cgoal">[ meta: máx 3/dia ]</div>
+        <div class="ez" id="ez-cig">
+          <div class="cact"><button class="sbtn amber" onclick="addCig()">+ 1</button><button class="sbtn muted" onclick="rmCig()">− 1</button></div>
+          <div style="text-align:center;margin-top:5px;"><button class="sbtn muted" style="font-size:8px;padding:3px 8px;" onclick="resetCig()">Zerar dia</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="pi">📖</div><div class="pt blue">Mangás</div></div>
+      <div class="pb">
+        <div class="srow">
+          <div class="slabel"><span class="sname">2026</span><span class="sval blue" id="manga-d">0/24</span></div>
+          <div class="btrack"><div class="bfill blue" id="manga-b" style="width:0%"></div></div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="manga-p">0% da meta</div>
+        </div>
+        <div class="manga-big"><div class="manga-n" id="manga-big">0</div><div class="manga-s">volumes lidos</div></div>
+        <div class="ez" id="ez-manga">
+          <div class="erow"><input class="sinput" id="i-manga" type="number" value="0"><button class="sbtn" onclick="updateManga()">Salvar</button><button class="sbtn" onclick="addManga()">+1</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdiv"><div class="sdl"></div><div class="sdt">// financeiro</div><div class="sdr"></div></div>
+  <div class="g2">
+    <div class="panel">
+      <div class="ph"><div class="pi">💰</div><div class="pt green">Renda</div><button onclick="toggleRenda()" id="renda-eye" style="margin-left:auto;background:transparent;border:none;cursor:pointer;font-size:14px;color:var(--muted);">👁</button></div>
+      <div class="pb">
+        <div class="iitem"><div class="ileft"><div class="iicon">🏠</div><div><div class="ilabel">Aluguéis</div><div class="inote">5 aptos · Rogério</div></div></div><div class="iamt renda-val" style="color:var(--green)">R$2.530</div></div>
+        <div class="iitem"><div class="ileft"><div class="iicon">🏦</div><div><div class="ilabel">Previdência</div><div class="inote">até CLT</div></div></div><div class="iamt renda-val" style="color:var(--amber)">R$5.000</div></div>
+        <div class="itotal"><div class="itlbl">total/mês</div><div class="itval renda-val">R$ 7.530</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="pi">📊</div><div class="pt amber">Patrimônio</div></div>
+      <div class="pb">
+        <div class="rblocks">
+          <div class="rb"><div class="rb-l">Reserva</div><div class="rb-v" id="res-v" style="color:var(--amber)">R$131k</div><div class="rb-s" id="res-m">~26 meses</div></div>
+          <div class="rb"><div class="rb-l">Investido</div><div class="rb-v" id="inv-v" style="color:var(--green)">R$500k</div><div class="rb-s">meta: R$1M</div></div>
+        </div>
+        <div class="srow">
+          <div class="slabel"><span class="sname" style="font-size:9px;">PROGRESSO R$1M</span><span class="sval blue" id="inv-pct">50%</span></div>
+          <div class="btrack"><div class="bfill blue" id="inv-bar" style="width:50%"></div></div>
+        </div>
+        <div class="ez" id="ez-inv">
+          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">INVESTIDO (R$)</div>
+          <div class="erow" style="margin-bottom:6px;"><input class="sinput" id="i-invest" type="number" value="500000" style="width:100px"><button class="sbtn" onclick="updateInvest()">OK</button></div>
+          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">RESERVA (R$)</div>
+          <div class="erow"><input class="sinput" id="i-reserva" type="number" value="131000" style="width:100px"><button class="sbtn amber" onclick="updateReserva()">OK</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sdiv"><div class="sdl"></div><div class="sdt">// missões 2026</div><div class="sdr"></div></div>
+  <div class="panel">
+    <div class="ph"><div class="pi">🗡️</div><div class="pt blue">Missões Ativas</div></div>
+    <div class="pb"><div class="goals-grid" id="goals-grid"></div></div>
+  </div>
+</div>
+
+<!-- MÍDIA TAB -->
+<div id="tab-media" class="tab-content">
+  <div class="media-tabs">
+    <button class="mtab active" id="mt-games" onclick="switchMedia('games',this)">🎮 Games</button>
+    <button class="mtab" id="mt-series" onclick="switchMedia('series',this)">📺 Séries</button>
+  </div>
+
+  <div id="mc-games" class="mcontent active">
+    <div class="media-list" id="list-games"></div>
+    <div class="add-media" id="add-games">
+      <div class="add-title">+ adicionar game</div>
+      <div class="add-fields">
+        <div class="add-row"><input class="sinput-full" id="ag-title" placeholder="Nome do game"></div>
+        <div class="add-row">
+          <input class="sinput-sm" id="ag-score" type="number" min="0" max="100" placeholder="Nota">
+          <input class="sinput-sm" id="ag-month" placeholder="Mês">
+          <button class="sbtn purple" onclick="addMedia('games')">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mc-series" class="mcontent">
+    <div class="media-list" id="list-series"></div>
+    <div class="add-media" id="add-series">
+      <div class="add-title">+ adicionar série</div>
+      <div class="add-fields">
+        <div class="add-row"><input class="sinput-full" id="as-title" placeholder="Nome da série"></div>
+        <div class="add-row">
+          <input class="sinput-sm" id="as-score" type="number" min="0" max="100" placeholder="Nota">
+          <input class="sinput-sm" id="as-month" placeholder="Mês">
+          <button class="sbtn purple" onclick="addMedia('series')">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- VIAGENS TAB -->
+<div id="tab-travel" class="tab-content">
+  <div class="travel-stats">
+    <div class="tstat"><div class="tstat-n">18</div><div class="tstat-l">PAÍSES</div></div>
+    <div class="tstat"><div class="tstat-n">9</div><div class="tstat-l">VIAGENS</div></div>
+    <div class="tstat"><div class="tstat-n">🌍</div><div class="tstat-l">MUNDO</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><div class="pi">✅</div><div class="pt green">Viagens Realizadas</div></div>
+    <div class="pb"><div id="travel-done"></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="ph"><div class="pi">⭐</div><div class="pt amber">Wish List</div></div>
+    <div class="pb"><div id="wishlist"></div></div>
+  </div>
+</div>
+
+
+<!-- EMPREGO TAB -->
+<div id="tab-jobs" class="tab-content">
+  <div class="panel">
+    <div class="ph"><div class="pi">🗡️</div><div class="pt blue">Vagas · Marketing · Rio de Janeiro</div></div>
+    <div class="pb">
+      <button class="job-search-btn" id="search-btn" onclick="searchJobs()">⚡ Buscar Vagas Agora</button>
+      <div id="jobs-meta" class="jobs-meta" style="display:none"></div>
+      <div id="jobs-list"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pi">🔗</div><div class="pt amber">Busca Rápida</div></div>
+    <div class="pb" style="display:flex;flex-direction:column;gap:6px;">
+      <a href="https://www.linkedin.com/jobs/search/?keywords=marketing&location=Rio+de+Janeiro&f_WT=1%2C3" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🔵 LinkedIn — Marketing RJ</a>
+      <a href="https://www.gupy.io/vagas-de-emprego?jobName=marketing&city=Rio+de+Janeiro" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🟢 Gupy — Marketing RJ</a>
+      <a href="https://www.catho.com.br/vagas-emprego/marketing/?where=Rio+de+Janeiro-RJ" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🔴 Catho — Marketing RJ</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer">[ SHADOW MONARCH SYSTEM · 2026 · DADOS SALVOS LOCALMENTE ]</div>
+</div>
+
+<script>
+const GOALS_DEF=[
+  {key:'casamento',icon:'💍',label:'Assinar casamento',sub:'essa semana · Nathália',done:true},
+  {key:'clt',icon:'💼',label:'Emprego CLT',sub:'Senior Marketing'},
+  {key:'viagem',icon:'✈️',label:'Viagem internacional',sub:'planejar + ir'},
+  {key:'ia',icon:'🤖',label:'Dominar IA',sub:'fluxos reais'},
+  {key:'ifood',icon:'🍳',label:'Comer em casa',sub:'menos iFood'},
+  {key:'nath',icon:'🏖️',label:'Feriados c/ Nathália',sub:'aproveitar'},
+  {key:'saude',icon:'🫀',label:'Saúde em dia',sub:'corpo + mente'},
+  {key:'milhao',icon:'💎',label:'R$1M investido',sub:'tracker acima'},
+];
+
+const TRAVEL_DONE=[
+  {flag:'🇵🇾',place:'Asunción',dates:'2014'},
+  {flag:'🇺🇸',place:'Orlando (4x)',dates:'2008 / 2010 / 2013 / 2015'},
+  {flag:'🇦🇷',place:'Buenos Aires',dates:'18–23 Jan 2023'},
+  {flag:'🇮🇹',place:'Roma & Sicília',dates:'04–11 Set 2024'},
+  {flag:'🇫🇷',place:'Paris',dates:'12 Set 2024'},
+  {flag:'🇳🇱',place:'Amsterdam',dates:'13–16 Set 2024'},
+  {flag:'🇨🇱',place:'Santiago / Atacama',dates:'24–30 Mar 2025'},
+  {flag:'🇲🇽',place:'Cidade do México',dates:'10–17 Out 2025'},
+  {flag:'🇧🇷',place:'BA – Cumuruxatiba',dates:'28 Dez – 04 Jan'},
+];
+
+const WISHLIST=[
+  {flag:'🇯🇵',place:'Tokyo +++'},
+  {flag:'🇹🇭',place:'Phi Phi Islands'},
+  {flag:'🇺🇸',place:'NY / Atlanta / Disney'},
+  {flag:'🇧🇷',place:'Nordeste + Noronha'},
+  {flag:'🇵🇪',place:'Machu Picchu'},
+  {flag:'🇵🇹',place:'Lisboa / Porto / Faro'},
+  {flag:'🇪🇸',place:'Mallorca'},
+  {flag:'🇬🇷',place:'Atenas / Santorini'},
+  {flag:'🇭🇷',place:'Split'},
+  {flag:'🇿🇦',place:'Joanesburgo'},
+];
+
+const INIT_GAMES=[
+  {title:'Split Fiction',score:84,month:'Jan'},
+  {title:'Dave the Diver',score:85,month:'Jan'},
+  {title:'Hyrule Warriors: Age of Calamity',score:7,month:'Jan'},
+  {title:'Dispatch',score:82,month:'Fev'},
+  {title:'Pokémon Pokopia',score:92,month:'Fev'},
+];
+
+const INIT_SERIES=[
+  {title:'Jujutsu Kaisen (JJK)',score:94,month:'Jan'},
+  {title:'BBB',score:null,month:'Jan'},
+  {title:'Demon Slayer',score:88,month:'Jan'},
+  {title:'Percy Jackson',score:60,month:'Jan'},
+  {title:'Vikings',score:null,month:'Fev'},
+  {title:'LOL',score:null,month:'Fev'},
+  {title:'Invencível',score:null,month:'Mar'},
+];
+
+let state={
+  editMode:true,
+  cigCount:0,cigDay:'',
+  gymTotal:0,gymMes:0,gymSem:0,
+  mangaCount:2,
+  weightHistory:[{val:62.48,day:'hoje'}],
+  investVal:500000,reservaVal:131000,
+  goals:{},
+  games:[...INIT_GAMES],
+  series:[...INIT_SERIES],
+};
+GOALS_DEF.forEach(g=>{state.goals[g.key]=g.done||false;});
+
+function save(){try{localStorage.setItem('sl_hq_2026',JSON.stringify(state));}catch(e){}}
+function load(){
+  try{const r=localStorage.getItem('sl_hq_2026');if(r){const s=JSON.parse(r);Object.assign(state,s);}}catch(e){}
+  const today=new Date().toDateString();
+  if(state.cigDay!==today){state.cigCount=0;state.cigDay=today;}
+}
+
+let ntimer;
+function notif(msg){
+  document.getElementById('nbody').textContent=msg;
+  const n=document.getElementById('notif');n.classList.add('show');
+  clearTimeout(ntimer);ntimer=setTimeout(()=>n.classList.remove('show'),2800);
+}
+
+function renderDate(){
+  document.getElementById('sys-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'}).toUpperCase();
+}
+
+function switchTab(t,el){
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  el.classList.add('active');
+}
+
+function switchMedia(t,el){
+  document.querySelectorAll('.mcontent').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('mc-'+t).classList.add('active');
+  el.classList.add('active');
+}
+
+function setMode(m){
+  state.editMode=m==='edit';
+  document.getElementById('btn-edit').classList.toggle('active',state.editMode);
+  document.getElementById('btn-view').classList.toggle('active',!state.editMode);
+  document.querySelectorAll('.ez').forEach(el=>el.classList.toggle('hidden',!state.editMode));
+  document.querySelectorAll('.add-media').forEach(el=>el.style.display=state.editMode?'block':'none');
+  document.querySelectorAll('.gitem').forEach(el=>el.style.pointerEvents=state.editMode?'auto':'none');
+}
+
+function renderCig(){
+  const dots=document.getElementById('cig-dots');dots.innerHTML='';
+  const total=Math.max(4,state.cigCount+1);
+  for(let i=1;i<=total;i++){
+    const d=document.createElement('div');
+    d.className='cdot'+(i<=state.cigCount?(i<=3?' lit':' over'):'');
+    d.textContent=i<=state.cigCount?'🚬':'·';
+    dots.appendChild(d);
+  }
+  const st=document.getElementById('cig-st');
+  if(!state.cigCount){st.textContent='[ NENHUM HOJE ]';st.style.color='var(--green)';}
+  else if(state.cigCount<=3){st.textContent=`[ ${state.cigCount} de 3 · dentro da meta ]`;st.style.color='var(--amber)';}
+  else{st.textContent=`[ ${state.cigCount} · +${state.cigCount-3} ACIMA DA META ]`;st.style.color='var(--red)';}
+}
+function addCig(){state.cigCount++;state.cigDay=new Date().toDateString();renderCig();save();if(state.cigCount===3)notif('[ LIMITE ] Meta de 3 atingida hoje.');else if(state.cigCount>3)notif(`[ ALERTA ] +${state.cigCount-3} acima da meta.`);else notif(`[ OK ] ${state.cigCount} cigarro${state.cigCount>1?'s':''} hoje.`);}
+function rmCig(){if(state.cigCount>0){state.cigCount--;renderCig();save();}}
+function resetCig(){state.cigCount=0;renderCig();save();notif('[ ZERADO ] Contagem reiniciada.');}
+
+function renderPeso(){
+  const h=state.weightHistory;
+  if(!h.length)return;
+  const last=h[h.length-1];
+  const diff=last.val-68;
+  const pct=diff<=0?100:Math.max(0,Math.round((1-diff/20)*100));
+  document.getElementById('peso-d').textContent=last.val.toFixed(2)+' kg';
+  document.getElementById('peso-b').style.width=pct+'%';
+  document.getElementById('peso-s').textContent=diff<=0?'✓ Meta atingida!':diff.toFixed(2)+' kg acima da meta de 68 kg';
+  const bars=document.getElementById('wc-bars');bars.innerHTML='';
+  if(!h.length){bars.innerHTML='<span class="wc-empty">sem registros</span>';return;}
+  const vals=h.map(w=>w.val);
+  const mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5;
+  h.forEach(w=>{
+    const ph=mx===mn?50:Math.round(((w.val-mn)/(mx-mn))*100);
+    const col=document.createElement('div');col.className='wc-col';
+    col.innerHTML=`<div class="wc-v">${w.val.toFixed(1)}</div><div class="wc-bar" style="height:${Math.max(4,ph)}%"></div><div class="wc-day">${w.day}</div>`;
+    bars.appendChild(col);
+  });
+}
+function logPeso(){
+  const v=parseFloat(document.getElementById('i-peso').value);
+  if(!v||isNaN(v))return;
+  const day=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  state.weightHistory.push({val:v,day});
+  if(state.weightHistory.length>7)state.weightHistory.shift();
+  renderPeso();save();
+  notif(`[ PESO ] ${v.toFixed(2)} kg · ${(v-68).toFixed(2)} kg da meta`);
+  document.getElementById('i-peso').value='';
+}
+
+function renderGym(){
+  const pct=Math.min(100,Math.round((state.gymTotal/150)*100));
+  document.getElementById('gym-d').textContent=state.gymTotal+'/150';
+  document.getElementById('gym-b').style.width=pct+'%';
+  document.getElementById('gym-p').textContent=pct+'% da meta anual';
+  document.getElementById('gym-mes').textContent=state.gymMes;
+  document.getElementById('gym-sem').textContent=state.gymSem;
+  document.getElementById('gym-falt').textContent=Math.max(0,150-state.gymTotal);
+}
+function updateGym(){state.gymTotal=parseInt(document.getElementById('i-gym').value)||0;renderGym();save();notif(`[ GYM ] ${state.gymTotal} sessões registradas.`);}
+function addGym(){state.gymTotal++;state.gymMes++;state.gymSem++;document.getElementById('i-gym').value=state.gymTotal;renderGym();save();notif('[ QUEST COMPLETA ] +1 sessão de musculação!');}
+
+function renderManga(){
+  const pct=Math.min(100,Math.round((state.mangaCount/24)*100));
+  document.getElementById('manga-d').textContent=state.mangaCount+'/24';
+  document.getElementById('manga-b').style.width=pct+'%';
+  document.getElementById('manga-p').textContent=pct+'% da meta';
+  document.getElementById('manga-big').textContent=state.mangaCount;
+}
+function updateManga(){state.mangaCount=parseInt(document.getElementById('i-manga').value)||0;renderManga();save();}
+function addManga(){state.mangaCount++;document.getElementById('i-manga').value=state.mangaCount;renderManga();save();notif('[ MANGÁ ] +1 volume concluído!');}
+
+function renderInvest(){
+  const v=state.investVal,pct=Math.min(100,Math.round((v/1000000)*100));
+  document.getElementById('inv-v').textContent=v>=1000000?'R$'+(v/1000000).toFixed(2)+'M':'R$'+Math.round(v/1000)+'k';
+  document.getElementById('inv-bar').style.width=pct+'%';
+  document.getElementById('inv-pct').textContent=pct+'%';
+}
+function renderReserva(){
+  const v=state.reservaVal,m=Math.round(v/5000);
+  document.getElementById('res-v').textContent='R$'+Math.round(v/1000)+'k';
+  document.getElementById('res-m').textContent='~'+m+' meses';
+  document.getElementById('res-v').style.color=m<6?'var(--red)':'var(--amber)';
+}
+function updateInvest(){state.investVal=parseFloat(document.getElementById('i-invest').value)||0;renderInvest();save();notif(`[ PATRIMÔNIO ] R$${state.investVal.toLocaleString('pt-BR')}.`);}
+function updateReserva(){state.reservaVal=parseFloat(document.getElementById('i-reserva').value)||0;renderReserva();save();notif(`[ RESERVA ] R$${state.reservaVal.toLocaleString('pt-BR')} restante.`);}
+
+function renderGoals(){
+  const grid=document.getElementById('goals-grid');grid.innerHTML='';
+  GOALS_DEF.forEach(g=>{
+    const done=state.goals[g.key];
+    const div=document.createElement('div');
+    div.className='gitem'+(done?' done':'');
+    div.id='g-'+g.key;div.onclick=()=>toggleGoal(g.key);
+    div.innerHTML=`<div class="gcheck${done?' done':''}">${done?'✓':''}</div><div class="gicon">${g.icon}</div><div class="gwrap"><div class="gtxt${done?' done':''}">${g.label}</div><div class="gsub">${g.sub}</div></div>`;
+    grid.appendChild(div);
+  });
+}
+function toggleGoal(k){
+  if(!state.editMode)return;
+  state.goals[k]=!state.goals[k];renderGoals();save();
+  const lbl=GOALS_DEF.find(g=>g.key===k).label;
+  notif(state.goals[k]?`[ MISSÃO CONCLUÍDA ] ${lbl}`:`[ REABERTA ] ${lbl}`);
+}
+
+function scoreClass(s){if(s===null||s===undefined)return 'sn';if(s>=85)return 'sg';if(s>=70)return 'sb';if(s>=50)return 'sa';return 'sr';}
+function mediaIcon(t){return t==='games'?'🎮':t==='series'?'📺':'🎬';}
+
+function renderMedia(type){
+  const list=document.getElementById('list-'+type);list.innerHTML='';
+  state[type].forEach((item)=>{
+    const sc=item.score;
+    const div=document.createElement('div');div.className='mitem';
+    div.innerHTML=`<div class="mitem-icon">${mediaIcon(type)}</div><div class="mitem-info"><div class="mitem-title">${item.title}</div><div class="mitem-sub">${item.month||''}</div></div><div class="mitem-score ${scoreClass(sc)}">${sc!==null&&sc!==undefined?sc:'—'}</div>`;
+    list.appendChild(div);
+  });
+}
+
+function addMedia(type){
+  const pfx={games:'ag',series:'as'}[type];
+  const title=document.getElementById(pfx+'-title').value.trim();
+  const scoreRaw=document.getElementById(pfx+'-score').value;
+  const month=document.getElementById(pfx+'-month').value.trim();
+  if(!title)return;
+  const score=scoreRaw!==''?parseInt(scoreRaw):null;
+  state[type].push({title,score,month:month||new Date().toLocaleDateString('pt-BR',{month:'short'})});
+  renderMedia(type);save();
+  document.getElementById(pfx+'-title').value='';
+  document.getElementById(pfx+'-score').value='';
+  document.getElementById(pfx+'-month').value='';
+  notif(`[ ADICIONADO ] ${title}`);
+}
+
+function renderTravel(){
+  const done=document.getElementById('travel-done');done.innerHTML='';
+  TRAVEL_DONE.forEach(t=>{
+    const div=document.createElement('div');div.className='titem';
+    div.innerHTML=`<div class="titem-flag">${t.flag}</div><div class="titem-info"><div class="titem-place">${t.place}</div><div class="titem-dates">${t.dates}</div></div><div class="titem-check">✓</div>`;
+    done.appendChild(div);
+  });
+  const wl=document.getElementById('wishlist');wl.innerHTML='';
+  WISHLIST.forEach(w=>{
+    const div=document.createElement('div');div.className='wl-item';
+    div.innerHTML=`<div class="wl-flag">${w.flag}</div><div class="wl-place">${w.place}</div>`;
+    wl.appendChild(div);
+  });
+}
+
+// ── EYE TOGGLE ───────────────────────────────────────────────────
+let rendaVisible = true;
+function toggleRenda(){
+  rendaVisible = !rendaVisible;
+  document.querySelectorAll('.renda-val').forEach(el => el.classList.toggle('hidden', !rendaVisible));
+  document.getElementById('renda-eye').textContent = rendaVisible ? '👁' : '🙈';
+}
+
+// ── JOB SEARCH ────────────────────────────────────────────────────
+async function searchJobs(){
+  const btn = document.getElementById('search-btn');
+  const list = document.getElementById('jobs-list');
+  const meta = document.getElementById('jobs-meta');
+  btn.disabled = true;
+  btn.textContent = '[ AGENTE ATIVO · ESCANEANDO... ]';
+  list.innerHTML = '<div class="job-loading">[ BUSCANDO VAGAS NO MERCADO RJ ]<br><br>aguarde alguns segundos...</div>';
+  meta.style.display = 'none';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        system: 'Você é um agente de busca de empregos. Busque vagas REAIS de marketing sênior no Rio de Janeiro. Retorne SOMENTE JSON válido sem markdown, sem explicação: {"vagas":[{"titulo":"","empresa":"","tipo":"presencial|híbrido|remoto","nivel":"","link":"","fonte":""}],"buscadoEm":""}. Busque vagas de: Senior Marketing Manager, Coordenador de Marketing, Gerente de Marketing, Head de Marketing, Marketing Sênior no Rio de Janeiro presencial ou híbrido. Liste até 6 vagas reais e recentes.',
+        messages: [{role:'user',content:'Busque agora vagas de marketing sênior presencial ou híbrido anunciadas recentemente no Rio de Janeiro. Retorne somente o JSON.'}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    const vagas = parsed.vagas || [];
+    list.innerHTML = '';
+    if(!vagas.length){
+      list.innerHTML = '<div class="job-loading">Nenhuma vaga encontrada. Tente novamente.</div>';
+    } else {
+      vagas.forEach(v=>{
+        const card = document.createElement('div'); card.className = 'job-card';
+        const tc = v.tipo && v.tipo.toLowerCase().includes('remoto') ? 'job-tag remote' : 'job-tag';
+        card.innerHTML = `<div class="job-title">${v.titulo||'—'}</div><div class="job-company">${v.empresa||'—'}</div><div class="job-meta">${v.nivel||''} · ${v.fonte||''}</div><span class="${tc}">${v.tipo||'presencial'}</span>${v.link?`<a class="job-link" href="${v.link}" target="_blank">${v.link}</a>`:''}`;
+        list.appendChild(card);
+      });
+      meta.style.display='block';
+      meta.textContent=`última busca: ${new Date().toLocaleString('pt-BR')} · ${vagas.length} vagas`;
+    }
+  } catch(e) {
+    list.innerHTML=`<div class="job-loading">Erro na busca. Tente novamente.<br><small style="color:var(--red)">${e.message}</small></div>`;
+  }
+  btn.disabled=false;
+  btn.textContent='⚡ Buscar Vagas Agora';
+}
+
+load();
+renderDate();
+renderCig();
+renderPeso();
+renderGym();
+renderManga();
+renderInvest();
+renderReserva();
+renderGoals();
+renderMedia('games');
+renderMedia('series');
+renderTravel();
+</script>
+</body>
+</html>
