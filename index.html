@@ -211,6 +211,34 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .job-link:hover{color:var(--blue);}
 .jobs-meta{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:right;margin-bottom:8px;letter-spacing:0.08em;}
 
+
+/* INVEST PASSWORD */
+.inv-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;gap:12px;}
+.inv-lock-icon{font-size:40px;margin-bottom:4px;}
+.inv-lock-title{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--muted);}
+.inv-pin-row{display:flex;gap:8px;justify-content:center;margin:8px 0;}
+.inv-pin-dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--muted);background:transparent;transition:all 0.2s;}
+.inv-pin-dot.filled{background:var(--blue);border-color:var(--blue);box-shadow:0 0 6px rgba(0,180,255,0.5);}
+.inv-pin-dot.error{background:var(--red);border-color:var(--red);}
+.inv-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:220px;margin:0 auto;}
+.inv-key{background:rgba(0,0,0,0.3);border:1px solid var(--border);color:var(--text);font-family:var(--font);font-size:18px;font-weight:700;padding:14px;cursor:pointer;text-align:center;transition:all 0.15s;-webkit-user-select:none;}
+.inv-key:active{background:var(--blue-d);border-color:var(--blue);transform:scale(0.94);}
+.inv-key.del{font-size:13px;color:var(--muted);}
+.inv-key.empty{border:none;background:transparent;cursor:default;}
+.inv-content{display:none;}
+.inv-content.unlocked{display:block;}
+.inv-locked{display:block;}
+.inv-locked.unlocked{display:none;}
+.inv-logout{background:transparent;border:1px solid var(--muted);color:var(--muted);font-family:var(--mono);font-size:9px;padding:4px 10px;cursor:pointer;letter-spacing:0.1em;margin-left:auto;display:block;margin-bottom:8px;}
+
+/* LINKEDIN PREVIEW */
+.linkedin-preview{margin-bottom:10px;}
+.ln-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,0,0,0.25);border:1px solid var(--border);margin-bottom:4px;}
+.ln-num{font-family:var(--mono);font-size:10px;color:var(--muted);min-width:16px;}
+.ln-title{font-size:12px;font-weight:700;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ln-loading{font-family:var(--mono);font-size:9px;color:var(--muted);padding:8px 0;text-align:center;letter-spacing:0.1em;}
+.ln-open{font-family:var(--mono);font-size:9px;padding:5px 10px;border:1px solid var(--blue);color:var(--blue);background:transparent;cursor:pointer;letter-spacing:0.08em;display:block;text-align:center;text-decoration:none;margin-top:4px;}
+
 @keyframes scanh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .panel{animation:fadeIn 0.4s ease both;}
@@ -245,6 +273,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <button class="tab" onclick="switchTab('media',this)">🎮 Mídia</button>
   <button class="tab" onclick="switchTab('travel',this)">✈️ Viagens</button>
   <button class="tab" onclick="switchTab('jobs',this)">💼 Emprego</button>
+  <button class="tab" onclick="switchTab('invest',this)">🔒 Investimentos</button>
 </div>
 
 <!-- STATUS TAB -->
@@ -319,38 +348,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
         <div class="manga-big"><div class="manga-n" id="manga-big">0</div><div class="manga-s">volumes lidos</div></div>
         <div class="ez" id="ez-manga">
           <div class="erow"><input class="sinput" id="i-manga" type="number" value="0"><button class="sbtn" onclick="updateManga()">Salvar</button><button class="sbtn" onclick="addManga()">+1</button></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sdiv"><div class="sdl"></div><div class="sdt">// financeiro</div><div class="sdr"></div></div>
-  <div class="g2">
-    <div class="panel">
-      <div class="ph"><div class="pi">💰</div><div class="pt green">Renda</div><button onclick="toggleRenda()" id="renda-eye" style="margin-left:auto;background:transparent;border:none;cursor:pointer;font-size:14px;color:var(--muted);">👁</button></div>
-      <div class="pb">
-        <div class="iitem"><div class="ileft"><div class="iicon">🏠</div><div><div class="ilabel">Aluguéis</div><div class="inote">5 aptos · Rogério</div></div></div><div class="iamt renda-val" style="color:var(--green)">R$2.530</div></div>
-        <div class="iitem"><div class="ileft"><div class="iicon">🏦</div><div><div class="ilabel">Previdência</div><div class="inote">até CLT</div></div></div><div class="iamt renda-val" style="color:var(--amber)">R$5.000</div></div>
-        <div class="itotal"><div class="itlbl">total/mês</div><div class="itval renda-val">R$ 7.530</div></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="ph"><div class="pi">📊</div><div class="pt amber">Patrimônio</div></div>
-      <div class="pb">
-        <div class="rblocks">
-          <div class="rb"><div class="rb-l">Reserva</div><div class="rb-v" id="res-v" style="color:var(--amber)">R$131k</div><div class="rb-s" id="res-m">~26 meses</div></div>
-          <div class="rb"><div class="rb-l">Investido</div><div class="rb-v" id="inv-v" style="color:var(--green)">R$500k</div><div class="rb-s">meta: R$1M</div></div>
-        </div>
-        <div class="srow">
-          <div class="slabel"><span class="sname" style="font-size:9px;">PROGRESSO R$1M</span><span class="sval blue" id="inv-pct">50%</span></div>
-          <div class="btrack"><div class="bfill blue" id="inv-bar" style="width:50%"></div></div>
-        </div>
-        <div class="ez" id="ez-inv">
-          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">INVESTIDO (R$)</div>
-          <div class="erow" style="margin-bottom:6px;"><input class="sinput" id="i-invest" type="number" value="500000" style="width:100px"><button class="sbtn" onclick="updateInvest()">OK</button></div>
-          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">RESERVA (R$)</div>
-          <div class="erow"><input class="sinput" id="i-reserva" type="number" value="131000" style="width:100px"><button class="sbtn amber" onclick="updateReserva()">OK</button></div>
         </div>
       </div>
     </div>
@@ -433,13 +430,92 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     </div>
   </div>
   <div class="panel">
-    <div class="ph"><div class="pi">🔗</div><div class="pt amber">Busca Rápida</div></div>
+    <div class="ph"><div class="pi">🔵</div><div class="pt blue">Top 3 LinkedIn Agora</div></div>
+    <div class="pb">
+      <div class="linkedin-preview" id="ln-preview">
+        <div class="ln-loading">[ clique em "Buscar Vagas" para carregar ]</div>
+      </div>
+      <a class="ln-open" href="https://www.linkedin.com/jobs/search/?keywords=marketing+s%C3%AAnior&location=Rio+de+Janeiro%2C+Brasil&f_WT=1%2C3&sortBy=DD" target="_blank">🔵 Ver todas no LinkedIn →</a>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="pi">🔗</div><div class="pt amber">Outras Plataformas</div></div>
     <div class="pb" style="display:flex;flex-direction:column;gap:6px;">
-      <a href="https://www.linkedin.com/jobs/search/?keywords=marketing&location=Rio+de+Janeiro&f_WT=1%2C3" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🔵 LinkedIn — Marketing RJ</a>
       <a href="https://www.gupy.io/vagas-de-emprego?jobName=marketing&city=Rio+de+Janeiro" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🟢 Gupy — Marketing RJ</a>
       <a href="https://www.catho.com.br/vagas-emprego/marketing/?where=Rio+de+Janeiro-RJ" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🔴 Catho — Marketing RJ</a>
     </div>
   </div>
+</div>
+
+
+<!-- INVESTIMENTOS TAB -->
+<div id="tab-invest" class="tab-content">
+
+  <!-- LOCKED STATE -->
+  <div class="inv-locked" id="inv-locked">
+    <div class="panel">
+      <div class="ph"><div class="pi">🔒</div><div class="pt blue">Área Restrita</div></div>
+      <div class="pb inv-lock">
+        <div class="inv-lock-icon">🔐</div>
+        <div class="inv-lock-title">INSIRA O PIN DE ACESSO</div>
+        <div class="inv-pin-row" id="pin-dots">
+          <div class="inv-pin-dot" id="pd0"></div>
+          <div class="inv-pin-dot" id="pd1"></div>
+          <div class="inv-pin-dot" id="pd2"></div>
+          <div class="inv-pin-dot" id="pd3"></div>
+        </div>
+        <div class="inv-numpad">
+          <button class="inv-key" onclick="pinKey('1')">1</button>
+          <button class="inv-key" onclick="pinKey('2')">2</button>
+          <button class="inv-key" onclick="pinKey('3')">3</button>
+          <button class="inv-key" onclick="pinKey('4')">4</button>
+          <button class="inv-key" onclick="pinKey('5')">5</button>
+          <button class="inv-key" onclick="pinKey('6')">6</button>
+          <button class="inv-key" onclick="pinKey('7')">7</button>
+          <button class="inv-key" onclick="pinKey('8')">8</button>
+          <button class="inv-key" onclick="pinKey('9')">9</button>
+          <div class="inv-key empty"></div>
+          <button class="inv-key" onclick="pinKey('0')">0</button>
+          <button class="inv-key del" onclick="pinDel()">⌫</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNLOCKED CONTENT -->
+  <div class="inv-content" id="inv-content">
+    <button class="inv-logout" onclick="lockInvest()">[ BLOQUEAR ]</button>
+
+    <div class="panel">
+      <div class="ph"><div class="pi">💰</div><div class="pt green">Renda Mensal</div></div>
+      <div class="pb">
+        <div class="iitem"><div class="ileft"><div class="iicon">🏠</div><div><div class="ilabel">Aluguéis</div><div class="inote">5 aptos · Rogério</div></div></div><div class="iamt" style="color:var(--green)">R$2.530</div></div>
+        <div class="iitem"><div class="ileft"><div class="iicon">🏦</div><div><div class="ilabel">Previdência</div><div class="inote">até CLT</div></div></div><div class="iamt" style="color:var(--amber)">R$5.000</div></div>
+        <div class="itotal"><div class="itlbl">total/mês</div><div class="itval">R$ 7.530</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><div class="pi">📊</div><div class="pt amber">Patrimônio</div></div>
+      <div class="pb">
+        <div class="rblocks">
+          <div class="rb"><div class="rb-l">Reserva</div><div class="rb-v" id="res-v" style="color:var(--amber)">R$131k</div><div class="rb-s" id="res-m">~26 meses</div></div>
+          <div class="rb"><div class="rb-l">Investido</div><div class="rb-v" id="inv-v" style="color:var(--green)">R$500k</div><div class="rb-s">meta: R$1M</div></div>
+        </div>
+        <div class="srow">
+          <div class="slabel"><span class="sname" style="font-size:9px;">PROGRESSO R$1M</span><span class="sval blue" id="inv-pct">50%</span></div>
+          <div class="btrack"><div class="bfill blue" id="inv-bar" style="width:50%"></div></div>
+        </div>
+        <div class="ez" id="ez-inv">
+          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">INVESTIDO (R$)</div>
+          <div class="erow" style="margin-bottom:6px;"><input class="sinput" id="i-invest" type="number" value="500000" style="width:100px"><button class="sbtn" onclick="updateInvest()">OK</button></div>
+          <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">RESERVA (R$)</div>
+          <div class="erow"><input class="sinput" id="i-reserva" type="number" value="131000" style="width:100px"><button class="sbtn amber" onclick="updateReserva()">OK</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer">[ SHADOW MONARCH SYSTEM · 2026 · DADOS SALVOS LOCALMENTE ]</div>
@@ -747,6 +823,7 @@ async function searchJobs(){
       });
       meta.style.display='block';
       meta.textContent=`última busca: ${new Date().toLocaleString('pt-BR')} · ${vagas.length} vagas`;
+      renderLinkedinPreview(vagas);
     }
   } catch(e) {
     list.innerHTML=`<div class="job-loading">Erro na busca. Tente novamente.<br><small style="color:var(--red)">${e.message}</small></div>`;
@@ -767,6 +844,74 @@ renderGoals();
 renderMedia('games');
 renderMedia('series');
 renderTravel();
+
+// ── PIN / INVEST ──────────────────────────────────────────────────
+const PIN = '9061';
+let pinBuffer = '';
+let investUnlocked = false;
+
+function pinKey(d){
+  if(pinBuffer.length >= 4) return;
+  pinBuffer += d;
+  updatePinDots();
+  if(pinBuffer.length === 4){
+    setTimeout(()=>{
+      if(pinBuffer === PIN){
+        investUnlocked = true;
+        document.getElementById('inv-locked').classList.add('unlocked');
+        document.getElementById('inv-content').classList.add('unlocked');
+        renderInvest(); renderReserva();
+        notif('[ ACESSO LIBERADO ] Bem-vindo, Shadow Monarch.');
+      } else {
+        document.querySelectorAll('.inv-pin-dot').forEach(d=>d.classList.add('error'));
+        setTimeout(()=>{
+          document.querySelectorAll('.inv-pin-dot').forEach(d=>d.classList.remove('error','filled'));
+          pinBuffer='';
+        },600);
+        return;
+      }
+      pinBuffer='';
+    },120);
+  }
+}
+
+function pinDel(){
+  if(pinBuffer.length > 0){ pinBuffer=pinBuffer.slice(0,-1); updatePinDots(); }
+}
+
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.toggle('filled', i < pinBuffer.length);
+    d.classList.remove('error');
+  }
+}
+
+function lockInvest(){
+  investUnlocked=false;
+  pinBuffer='';
+  updatePinDots();
+  document.getElementById('inv-locked').classList.remove('unlocked');
+  document.getElementById('inv-content').classList.remove('unlocked');
+}
+
+// ── LINKEDIN PREVIEW ──────────────────────────────────────────────
+function renderLinkedinPreview(vagas){
+  const preview = document.getElementById('ln-preview');
+  if(!preview) return;
+  if(!vagas || !vagas.length){
+    preview.innerHTML='<div class="ln-loading">nenhuma vaga encontrada</div>';
+    return;
+  }
+  const top3 = vagas.slice(0,3);
+  preview.innerHTML = top3.map((v,i)=>`
+    <div class="ln-item">
+      <div class="ln-num">#${i+1}</div>
+      <div class="ln-title">${v.titulo||'—'} · ${v.empresa||''}</div>
+    </div>
+  `).join('');
+}
+
 </script>
 </body>
 </html>
