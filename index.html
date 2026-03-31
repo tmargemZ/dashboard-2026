@@ -312,7 +312,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <div class="hdr-r">
       <div class="hdr-date" id="sys-date"></div>
       <div class="hdr-status"><span class="sdot"></span>ONLINE</div>
-      <div class="clima-widget" id="clima-widget"><span class="clima-icon">🌤</span><span class="clima-temp" id="clima-temp">--°C</span><span class="clima-desc" id="clima-desc">BOTAFOGO · RJ</span></div>
+      <div class="clima-widget" id="clima-widget"><span class="clima-icon">🌤</span><span class="clima-temp" id="clima-temp">...°C</span><span class="clima-desc" id="clima-desc">BOTAFOGO · RJ</span></div>
     </div>
   </div>
 </div>
@@ -325,7 +325,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <button class="tab" onclick="switchTab('invest',this)">🔒 Investimentos</button>
 </div>
 
-<!-- STATUS TAB -->
+<!-- ═══ STATUS ═══ -->
 <div id="tab-status" class="tab-content active">
   <div class="mode-bar">
     <button class="mbtn active" id="btn-edit" onclick="setMode('edit')">◈ Editar</button>
@@ -338,9 +338,9 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       <div class="ph"><div class="pi">⚖️</div><div class="pt green">Peso</div></div>
       <div class="pb">
         <div class="srow">
-          <div class="slabel"><span class="sname">ATUAL</span><span class="sval green" id="peso-d">62,5 kg</span></div>
+          <div class="slabel"><span class="sname">ATUAL</span><span class="sval green" id="peso-d">62,48 kg</span></div>
           <div class="btrack"><div class="bfill green" id="peso-b" style="width:25%"></div></div>
-          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="peso-s">5,5 kg acima da meta</div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="peso-s">5,48 kg acima da meta</div>
         </div>
         <div class="wc">
           <div class="wc-label">ÚLTIMOS 7 DIAS</div>
@@ -390,13 +390,13 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       <div class="ph"><div class="pi">📖</div><div class="pt blue">Mangás</div></div>
       <div class="pb">
         <div class="srow">
-          <div class="slabel"><span class="sname">2026</span><span class="sval blue" id="manga-d">0/24</span></div>
-          <div class="btrack"><div class="bfill blue" id="manga-b" style="width:0%"></div></div>
-          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="manga-p">0% da meta</div>
+          <div class="slabel"><span class="sname">2026</span><span class="sval blue" id="manga-d">2/24</span></div>
+          <div class="btrack"><div class="bfill blue" id="manga-b" style="width:8%"></div></div>
+          <div style="font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;" id="manga-p">8% da meta</div>
         </div>
-        <div class="manga-big"><div class="manga-n" id="manga-big">0</div><div class="manga-s">volumes lidos</div></div>
+        <div class="manga-big"><div class="manga-n" id="manga-big">2</div><div class="manga-s">volumes lidos</div></div>
         <div class="ez" id="ez-manga">
-          <div class="erow"><input class="sinput" id="i-manga" type="number" value="0"><button class="sbtn" onclick="updateManga()">Salvar</button><button class="sbtn" onclick="addManga()">+1</button></div>
+          <div class="erow"><input class="sinput" id="i-manga" type="number" value="2"><button class="sbtn" onclick="updateManga()">Salvar</button><button class="sbtn" onclick="addManga()">+1</button></div>
         </div>
       </div>
     </div>
@@ -409,7 +409,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   </div>
 </div>
 
-<!-- MÍDIA TAB -->
+<!-- ═══ MÍDIA ═══ -->
 <div id="tab-media" class="tab-content">
   <div class="media-tabs">
     <button class="mtab active" id="mt-games" onclick="switchMedia('games',this)">🎮 Games</button>
@@ -447,30 +447,26 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- VIAGENS TAB -->
+<!-- ═══ VIAGENS ═══ -->
 <div id="tab-travel" class="tab-content">
   <div class="travel-stats">
     <div class="tstat"><div class="tstat-n">18</div><div class="tstat-l">PAÍSES</div></div>
     <div class="tstat"><div class="tstat-n">9</div><div class="tstat-l">VIAGENS</div></div>
     <div class="tstat"><div class="tstat-n">🌍</div><div class="tstat-l">MUNDO</div></div>
   </div>
-
   <div class="panel">
     <div class="ph"><div class="pi">✅</div><div class="pt green">Viagens Realizadas</div></div>
     <div class="pb"><div id="travel-done"></div></div>
   </div>
-
   <div class="panel">
     <div class="ph"><div class="pi">⭐</div><div class="pt amber">Wish List</div></div>
     <div class="pb"><div id="wishlist"></div></div>
   </div>
 </div>
 
-
-<!-- EMPREGO TAB -->
+<!-- ═══ EMPREGO ═══ -->
 <div id="tab-jobs" class="tab-content">
   <div class="panel">
     <div class="ph"><div class="pi">🗡️</div><div class="pt blue">Vagas · Marketing · Rio de Janeiro</div></div>
@@ -496,13 +492,25 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       <a href="https://www.catho.com.br/vagas-emprego/marketing/?where=Rio+de+Janeiro-RJ" target="_blank" style="display:block;padding:8px 10px;border:1px solid var(--border);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.05em;">🔴 Catho — Marketing RJ</a>
     </div>
   </div>
+  <div class="panel">
+    <div class="ph"><div class="pi">✍️</div><div class="pt green">Gerador de Cover Letter</div></div>
+    <div class="pb">
+      <div class="cl-form">
+        <div style="font-size:8px;color:var(--muted);letter-spacing:0.1em;margin-bottom:2px;">URL DA VAGA</div>
+        <input class="sinput-full" id="cl-url" type="url" placeholder="https://linkedin.com/jobs/...">
+        <div style="font-size:8px;color:var(--muted);letter-spacing:0.1em;margin:4px 0 2px;">OU DESCREVA A VAGA</div>
+        <textarea class="cl-textarea" id="cl-desc" placeholder="Cole o texto da vaga ou descreva o cargo e empresa..."></textarea>
+        <label class="img-upload-label" for="vaga-img-input">📎 Anexar print da vaga (opcional)<input type="file" id="vaga-img-input" accept="image/*" onchange="previewImg(this)"></label>
+        <div class="img-preview-name" id="img-preview-name"></div>
+        <button class="sbtn green" style="width:100%;padding:8px;" onclick="gerarCoverLetter()">⚡ Gerar Cover Letter com IA</button>
+      </div>
+      <div id="cl-result"></div>
+    </div>
+  </div>
 </div>
 
-
-<!-- INVESTIMENTOS TAB -->
+<!-- ═══ INVESTIMENTOS ═══ -->
 <div id="tab-invest" class="tab-content">
-
-  <!-- LOCKED STATE -->
   <div class="inv-locked" id="inv-locked">
     <div class="panel">
       <div class="ph"><div class="pi">🔒</div><div class="pt blue">Área Restrita</div></div>
@@ -533,10 +541,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     </div>
   </div>
 
-  <!-- UNLOCKED CONTENT -->
   <div class="inv-content" id="inv-content">
     <button class="inv-logout" onclick="lockInvest()">[ BLOQUEAR ]</button>
-
     <div class="panel">
       <div class="ph"><div class="pi">💰</div><div class="pt green">Renda Mensal</div></div>
       <div class="pb">
@@ -545,7 +551,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
         <div class="itotal"><div class="itlbl">total/mês</div><div class="itval">R$ 7.530</div></div>
       </div>
     </div>
-
     <div class="panel">
       <div class="ph"><div class="pi">📊</div><div class="pt amber">Patrimônio</div></div>
       <div class="pb">
@@ -565,26 +570,25 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
         </div>
       </div>
     </div>
-  <div class="panel" style="margin-top:8px;">
-    <div class="ph"><div class="pi">📈</div><div class="pt purple">Simulador de Renda Passiva</div></div>
-    <div class="pb">
-      <div class="macro-row" id="macro-row">
-        <div class="macro-badge">Selic <span id="m-selic">--</span>%</div>
-        <div class="macro-badge">CDI <span id="m-cdi">--</span>%</div>
-        <div class="macro-badge">IPCA <span id="m-ipca">--</span>%</div>
+    <div class="panel">
+      <div class="ph"><div class="pi">📈</div><div class="pt purple">Simulador de Renda Passiva</div></div>
+      <div class="pb">
+        <div class="macro-row" id="macro-row">
+          <div class="macro-badge">Selic <span id="m-selic">--</span>%</div>
+          <div class="macro-badge">CDI <span id="m-cdi">--</span>%</div>
+          <div class="macro-badge">IPCA <span id="m-ipca">--</span>%</div>
+        </div>
+        <div class="sim-slider-label">
+          <span class="sim-slider-name">Capital simulado</span>
+          <span class="sval blue" id="sim-capital-label">R$500k</span>
+        </div>
+        <input type="range" class="sim-range" id="sim-capital" min="100000" max="2000000" step="50000" value="500000" oninput="renderSimulador()">
+        <div class="sim-result" id="sim-result"></div>
+        <div id="meta-passiva-badge"></div>
+        <div style="font-family:var(--mono);font-size:7px;color:var(--muted);margin-top:8px;">* estimativas brutas. IR e taxas variam por produto.</div>
       </div>
-      <div class="sim-slider-label">
-        <span class="sim-slider-name">Capital simulado</span>
-        <span class="sval blue" id="sim-capital-label">R$500k</span>
-      </div>
-      <input type="range" class="sim-range" id="sim-capital" min="100000" max="2000000" step="50000" value="500000" oninput="renderSimulador()">
-      <div class="sim-result" id="sim-result"></div>
-      <div id="meta-passiva-badge"></div>
-      <div style="font-family:var(--mono);font-size:7px;color:var(--muted);margin-top:8px;">* estimativas brutas. rendimento real depende de IR, taxas e produto escolhido.</div>
     </div>
   </div>
-  </div>
-
 </div>
 
 <div class="footer">[ SHADOW MONARCH SYSTEM · 2026 · DADOS SALVOS LOCALMENTE ]</div>
