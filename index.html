@@ -986,21 +986,47 @@ function renderLinkedinPreview(vagas){
 
 
 // ── CLIMA ─────────────────────────────────────────────────────────
+async function fetchClimaCoords(lat, lon, label){
+  const icons = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',61:'🌧',71:'🌨',80:'🌦',95:'⛈'};
+  const descs = {0:'CÉU LIMPO',1:'POUCAS NUVENS',2:'NUBLADO',3:'ENCOBERTO',45:'NEBLINA',51:'CHUVISCO',61:'CHUVA',71:'NEVE',80:'PANCADAS',95:'TEMPESTADE'};
+  const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=America%2FSao_Paulo`);
+  if(!r.ok) throw new Error('status '+r.status);
+  const d = await r.json();
+  const temp = Math.round(d.current.temperature_2m);
+  const code = d.current.weather_code;
+  const icon = icons[code] ?? icons[Math.floor(code/10)*10] ?? '🌤';
+  const desc = descs[code] ?? descs[Math.floor(code/10)*10] ?? 'RJ';
+  document.getElementById('clima-temp').textContent = temp + '°C';
+  document.getElementById('clima-desc').textContent = desc + ' · ' + label.toUpperCase();
+  document.getElementById('clima-widget').querySelector('.clima-icon').textContent = icon;
+}
+
 async function fetchClima(){
+  document.getElementById('clima-temp').textContent = '...';
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        try{
+          await fetchClimaCoords(pos.coords.latitude, pos.coords.longitude, 'VOCÊ');
+        }catch(e){
+          await fetchClimaFallback();
+        }
+      },
+      async () => { await fetchClimaFallback(); },
+      {timeout:5000}
+    );
+  } else {
+    await fetchClimaFallback();
+  }
+}
+
+async function fetchClimaFallback(){
   try{
-    // Botafogo, Rio de Janeiro: lat=-22.9519, lon=-43.1729
-    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-22.9519&longitude=-43.1729&current=temperature_2m,weather_code&timezone=America/Sao_Paulo');
-    const d = await r.json();
-    const temp = Math.round(d.current.temperature_2m);
-    const code = d.current.weather_code;
-    const icons = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',61:'🌧',71:'🌨',80:'🌦',95:'⛈'};
-    const descs = {0:'CÉU LIMPO',1:'POUCAS NUVENS',2:'PARCIALMENTE NUBLADO',3:'NUBLADO',45:'NEBLINA',51:'CHUVISCO',61:'CHUVA',71:'NEVE',80:'PANCADAS',95:'TEMPESTADE'};
-    const icon = icons[code] || icons[Math.floor(code/10)*10] || '🌤';
-    const desc = descs[code] || descs[Math.floor(code/10)*10] || 'BOTAFOGO · RJ';
-    document.getElementById('clima-temp').textContent = temp + '°C';
-    document.getElementById('clima-desc').textContent = desc + ' · BOTAFOGO';
-    document.getElementById('clima-widget').querySelector('.clima-icon').textContent = icon;
-  }catch(e){ console.log('clima err',e); }
+    await fetchClimaCoords(-22.9519, -43.1729, 'Botafogo');
+  }catch(e){
+    document.getElementById('clima-temp').textContent = '--°C';
+    document.getElementById('clima-desc').textContent = 'BOTAFOGO · RJ';
+  }
 }
 
 // ── GAMES COUNTDOWN ───────────────────────────────────────────────
