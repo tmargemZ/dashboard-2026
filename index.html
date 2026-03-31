@@ -239,6 +239,54 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .ln-loading{font-family:var(--mono);font-size:9px;color:var(--muted);padding:8px 0;text-align:center;letter-spacing:0.1em;}
 .ln-open{font-family:var(--mono);font-size:9px;padding:5px 10px;border:1px solid var(--blue);color:var(--blue);background:transparent;cursor:pointer;letter-spacing:0.08em;display:block;text-align:center;text-decoration:none;margin-top:4px;}
 
+
+/* CLIMA */
+.clima-widget{display:flex;align-items:center;gap:6px;margin-top:6px;padding:5px 8px;background:rgba(0,180,255,0.06);border:1px solid rgba(0,180,255,0.15);}
+.clima-temp{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--blue);}
+.clima-desc{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.08em;}
+.clima-icon{font-size:18px;}
+
+/* COVER LETTER */
+.cl-form{display:flex;flex-direction:column;gap:8px;}
+.cl-textarea{background:rgba(0,15,40,0.9);border:1px solid var(--glow);color:var(--text);font-family:var(--mono);font-size:11px;padding:8px;outline:none;resize:vertical;min-height:80px;width:100%;}
+.cl-textarea:focus{border-color:var(--blue);}
+.cl-output{background:rgba(0,0,0,0.4);border:1px solid var(--border);padding:10px 12px;font-size:12px;line-height:1.7;color:var(--text);white-space:pre-wrap;margin-top:8px;max-height:320px;overflow-y:auto;}
+.cl-loading{font-family:var(--mono);font-size:9px;color:var(--muted);text-align:center;padding:16px;letter-spacing:0.12em;}
+.cl-copy-btn{background:transparent;border:1px solid var(--green);color:var(--green);font-family:var(--font);font-weight:700;font-size:10px;padding:5px 12px;cursor:pointer;letter-spacing:0.1em;margin-top:6px;}
+.img-upload-label{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px dashed var(--glow);color:var(--muted);font-size:11px;font-family:var(--mono);cursor:pointer;letter-spacing:0.08em;}
+.img-upload-label:hover{border-color:var(--blue);color:var(--blue);}
+#vaga-img-input{display:none;}
+.img-preview-name{font-size:9px;color:var(--green);margin-top:3px;font-family:var(--mono);}
+
+/* SIMULADOR */
+.sim-result{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;}
+.sim-card{background:rgba(0,0,0,0.3);border:1px solid var(--border);padding:8px 10px;text-align:center;}
+.sim-card-label{font-size:8px;color:var(--muted);letter-spacing:0.08em;margin-bottom:4px;}
+.sim-card-val{font-family:var(--mono);font-size:14px;font-weight:700;}
+.sim-card-val.green{color:var(--green);}
+.sim-card-val.blue{color:var(--blue);}
+.sim-card-val.amber{color:var(--amber);}
+.sim-card-val.purple{color:var(--purple);}
+.sim-card-sub{font-size:7px;color:var(--muted);margin-top:2px;}
+.macro-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.macro-badge{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:2px;background:rgba(0,0,0,0.3);border:1px solid var(--border);}
+.macro-badge span{color:var(--blue);}
+.sim-slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.sim-slider-name{font-size:10px;font-weight:600;letter-spacing:0.06em;}
+.sim-range{width:100%;margin:4px 0 10px;accent-color:var(--blue);}
+.meta-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--green-d);border:1px solid rgba(0,255,136,0.2);margin-top:4px;}
+.meta-badge-txt{font-family:var(--mono);font-size:9px;color:var(--green);}
+
+/* GAMES EXTRAS */
+.hltb-badge{font-family:var(--mono);font-size:8px;color:var(--amber);margin-top:2px;}
+.countdown-card{background:rgba(0,0,0,0.25);border:1px solid var(--border);padding:9px 10px;margin-bottom:5px;display:flex;align-items:center;gap:10px;}
+.cd-icon{font-size:20px;flex-shrink:0;}
+.cd-info{flex:1;min-width:0;}
+.cd-title{font-size:12px;font-weight:700;color:var(--text);}
+.cd-date{font-size:9px;color:var(--muted);margin-top:1px;}
+.cd-days{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--blue);flex-shrink:0;}
+.cd-label{font-size:8px;color:var(--muted);text-align:right;}
+
 @keyframes scanh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .panel{animation:fadeIn 0.4s ease both;}
@@ -264,6 +312,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <div class="hdr-r">
       <div class="hdr-date" id="sys-date"></div>
       <div class="hdr-status"><span class="sdot"></span>ONLINE</div>
+      <div class="clima-widget" id="clima-widget"><span class="clima-icon">🌤</span><span class="clima-temp" id="clima-temp">--°C</span><span class="clima-desc" id="clima-desc">BOTAFOGO · RJ</span></div>
     </div>
   </div>
 </div>
@@ -369,6 +418,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 
   <div id="mc-games" class="mcontent active">
     <div class="media-list" id="list-games"></div>
+    <div style="margin:10px 0 5px;font-size:8px;color:var(--muted);letter-spacing:0.14em;">⏳ RADAR DE LANÇAMENTOS</div>
+    <div id="games-countdown"></div>
     <div class="add-media" id="add-games">
       <div class="add-title">+ adicionar game</div>
       <div class="add-fields">
@@ -514,6 +565,24 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
         </div>
       </div>
     </div>
+  <div class="panel" style="margin-top:8px;">
+    <div class="ph"><div class="pi">📈</div><div class="pt purple">Simulador de Renda Passiva</div></div>
+    <div class="pb">
+      <div class="macro-row" id="macro-row">
+        <div class="macro-badge">Selic <span id="m-selic">--</span>%</div>
+        <div class="macro-badge">CDI <span id="m-cdi">--</span>%</div>
+        <div class="macro-badge">IPCA <span id="m-ipca">--</span>%</div>
+      </div>
+      <div class="sim-slider-label">
+        <span class="sim-slider-name">Capital simulado</span>
+        <span class="sval blue" id="sim-capital-label">R$500k</span>
+      </div>
+      <input type="range" class="sim-range" id="sim-capital" min="100000" max="2000000" step="50000" value="500000" oninput="renderSimulador()">
+      <div class="sim-result" id="sim-result"></div>
+      <div id="meta-passiva-badge"></div>
+      <div style="font-family:var(--mono);font-size:7px;color:var(--muted);margin-top:8px;">* estimativas brutas. rendimento real depende de IR, taxas e produto escolhido.</div>
+    </div>
+  </div>
   </div>
 
 </div>
@@ -844,6 +913,9 @@ renderGoals();
 renderMedia('games');
 renderMedia('series');
 renderTravel();
+fetchClima();
+renderCountdown();
+fetchMacro();
 
 // ── PIN / INVEST ──────────────────────────────────────────────────
 const PIN = '9061';
@@ -910,6 +982,194 @@ function renderLinkedinPreview(vagas){
       <div class="ln-title">${v.titulo||'—'} · ${v.empresa||''}</div>
     </div>
   `).join('');
+}
+
+
+// ── CLIMA ─────────────────────────────────────────────────────────
+async function fetchClima(){
+  try{
+    // Botafogo, Rio de Janeiro: lat=-22.9519, lon=-43.1729
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-22.9519&longitude=-43.1729&current=temperature_2m,weather_code&timezone=America/Sao_Paulo');
+    const d = await r.json();
+    const temp = Math.round(d.current.temperature_2m);
+    const code = d.current.weather_code;
+    const icons = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',61:'🌧',71:'🌨',80:'🌦',95:'⛈'};
+    const descs = {0:'CÉU LIMPO',1:'POUCAS NUVENS',2:'PARCIALMENTE NUBLADO',3:'NUBLADO',45:'NEBLINA',51:'CHUVISCO',61:'CHUVA',71:'NEVE',80:'PANCADAS',95:'TEMPESTADE'};
+    const icon = icons[code] || icons[Math.floor(code/10)*10] || '🌤';
+    const desc = descs[code] || descs[Math.floor(code/10)*10] || 'BOTAFOGO · RJ';
+    document.getElementById('clima-temp').textContent = temp + '°C';
+    document.getElementById('clima-desc').textContent = desc + ' · BOTAFOGO';
+    document.getElementById('clima-widget').querySelector('.clima-icon').textContent = icon;
+  }catch(e){ console.log('clima err',e); }
+}
+
+// ── GAMES COUNTDOWN ───────────────────────────────────────────────
+const UPCOMING_GAMES = [
+  {title:'Pragmata',date:'2026-04-17',icon:'🎮'},
+  {title:'Mouse: P.I. for Hire',date:'2026-04-16',icon:'🎮'},
+  {title:'Tomodachi Life: Living the Dream',date:'2026-04-16',icon:'🎮'},
+  {title:'Yoshi and the Mysterious Book',date:'2026-05-21',icon:'🍃'},
+  {title:'The Duskbloods (FromSoftware)',date:'2026-12-31',icon:'⚔️'},
+  {title:'Fire Emblem: Fortune's Weave',date:'2026-12-31',icon:'🔥'},
+];
+
+function renderCountdown(){
+  const el = document.getElementById('games-countdown');
+  if(!el) return;
+  const now = new Date();
+  el.innerHTML = UPCOMING_GAMES.map(g=>{
+    const release = new Date(g.date);
+    const diff = Math.ceil((release - now) / (1000*60*60*24));
+    const days = diff <= 0 ? '🟢 JÁ!' : diff;
+    const label = diff <= 0 ? '' : diff === 1 ? 'dia' : 'dias';
+    return `<div class="countdown-card">
+      <div class="cd-icon">${g.icon}</div>
+      <div class="cd-info"><div class="cd-title">${g.title}</div><div class="cd-date">${release.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})}</div></div>
+      <div style="text-align:right"><div class="cd-days">${days}</div><div class="cd-label">${label}</div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── COVER LETTER ──────────────────────────────────────────────────
+let vagaImgBase64 = null;
+
+function previewImg(input){
+  if(!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  document.getElementById('img-preview-name').textContent = '📎 ' + file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    vagaImgBase64 = e.target.result.split(',')[1];
+  };
+  reader.readAsDataURL(file);
+}
+
+async function gerarCoverLetter(){
+  const url = document.getElementById('cl-url').value.trim();
+  const desc = document.getElementById('cl-desc').value.trim();
+  const result = document.getElementById('cl-result');
+
+  if(!url && !desc && !vagaImgBase64){
+    notif('[ ERRO ] Cole a URL, descreva a vaga ou anexe um print.');
+    return;
+  }
+
+  result.innerHTML = '<div class="cl-loading">[ AGENTE ATIVO · ANALISANDO VAGA ]<br><br>gerando sua cover letter...</div>';
+
+  const profile = `Thiago Almeida Margem, 31 anos, profissional de marketing com 12 anos de experiência em brand marketing, growth, trade marketing e go-to-market strategy. Trabalhou na British American Tobacco, Coca-Cola Andina (Del Valle, Kapo, Ades — atingiu maior volume de Kapo em 10 anos), Campos Mello Advogados, Grupo VMM, Varos Financial Services (criou área de Growth Marketing do zero). Co-fundador da ROKT, agência de produto e marketing. Fluente em inglês, avançado em espanhol. Baseado no Rio de Janeiro.`;
+
+  try {
+    let userContent = [];
+
+    if(vagaImgBase64){
+      userContent.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:vagaImgBase64}});
+    }
+
+    let vagaText = '';
+    if(url) vagaText += 'URL da vaga: ' + url + '\n\n';
+    if(desc) vagaText += 'Descrição: ' + desc;
+    if(!vagaText && vagaImgBase64) vagaText = 'Analise a vaga na imagem acima.';
+
+    userContent.push({type:'text', text: vagaText + '\n\nGere uma cover letter profissional, autêntica e direta para esta vaga. Tom humano, não corporativo. Máximo 3 parágrafos curtos. Em português.'});
+
+    const tools = url ? [{type:'web_search_20250305',name:'web_search'}] : undefined;
+
+    const body = {
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 800,
+      system: `Você é um especialista em carreira e redação profissional. Escreva cover letters autênticas e humanas — nunca genéricas ou corporativas. Use o perfil do candidato: ${profile}. Adapte o tom para cada vaga. Seja direto, confiante e pessoal.`,
+      messages: [{role:'user', content: userContent}]
+    };
+    if(tools) body.tools = tools;
+
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await r.json();
+    const text = data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+
+    result.innerHTML = `
+      <div class="cl-output">${text}</div>
+      <button class="cl-copy-btn" onclick="copyCL()">📋 Copiar texto</button>
+    `;
+    result.querySelector('.cl-output').dataset.text = text;
+  } catch(e){
+    result.innerHTML = `<div class="cl-loading">Erro ao gerar. Tente novamente.<br><small style="color:var(--red)">${e.message}</small></div>`;
+  }
+}
+
+function copyCL(){
+  const text = document.querySelector('.cl-output')?.dataset.text || document.querySelector('.cl-output')?.textContent;
+  if(text) navigator.clipboard.writeText(text).then(()=>notif('[ COPIADO ] Cover letter copiada!'));
+}
+
+// ── SIMULADOR DE RENDA PASSIVA ────────────────────────────────────
+let macroData = {selic: 13.75, cdi: 13.65, ipca: 4.83};
+
+async function fetchMacro(){
+  try{
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        system:'Retorne SOMENTE JSON válido sem markdown: {"selic":0.0,"cdi":0.0,"ipca":0.0} com os valores atuais em % ao ano do Brasil.',
+        messages:[{role:'user',content:'Qual a taxa Selic atual, CDI e IPCA acumulado 12 meses do Brasil? Retorne só o JSON.'}]
+      })
+    });
+    const d = await r.json();
+    const text = d.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    macroData = parsed;
+    document.getElementById('m-selic').textContent = parsed.selic.toFixed(2);
+    document.getElementById('m-cdi').textContent = parsed.cdi.toFixed(2);
+    document.getElementById('m-ipca').textContent = parsed.ipca.toFixed(2);
+    renderSimulador();
+  }catch(e){
+    document.getElementById('m-selic').textContent = macroData.selic;
+    document.getElementById('m-cdi').textContent = macroData.cdi;
+    document.getElementById('m-ipca').textContent = macroData.ipca;
+    renderSimulador();
+  }
+}
+
+function renderSimulador(){
+  const capital = parseInt(document.getElementById('sim-capital')?.value || 500000);
+  const label = document.getElementById('sim-capital-label');
+  if(label) label.textContent = capital >= 1000000 ? 'R$'+(capital/1000000).toFixed(1)+'M' : 'R$'+Math.round(capital/1000)+'k';
+
+  const selic = macroData.selic / 100;
+  const cdi = macroData.cdi / 100;
+  const ipca = macroData.ipca / 100;
+
+  const rendCDB = (capital * cdi * 0.90) / 12;       // CDB 90% CDI
+  const rendTesouro = (capital * selic * 0.85) / 12; // Tesouro Selic líq IR 15%
+  const rendFII = (capital * 0.085) / 12;             // FII ~8.5% a.a.
+  const rendRealCDB = rendCDB - (capital * ipca / 12);
+
+  const fmt = v => 'R$' + Math.round(v).toLocaleString('pt-BR');
+  const meta = 7800;
+
+  const result = document.getElementById('sim-result');
+  if(!result) return;
+  result.innerHTML = `
+    <div class="sim-card"><div class="sim-card-label">CDB 90% CDI</div><div class="sim-card-val green">${fmt(rendCDB)}/mês</div><div class="sim-card-sub">bruto · IR já descontado</div></div>
+    <div class="sim-card"><div class="sim-card-label">Tesouro Selic</div><div class="sim-card-val blue">${fmt(rendTesouro)}/mês</div><div class="sim-card-sub">líquido estimado</div></div>
+    <div class="sim-card"><div class="sim-card-label">FIIs (~8,5% a.a.)</div><div class="sim-card-val purple">${fmt(rendFII)}/mês</div><div class="sim-card-sub">isento IR pessoa física</div></div>
+    <div class="sim-card"><div class="sim-card-label">Rendimento real CDB</div><div class="sim-card-val ${rendRealCDB>0?'amber':'red'}">${fmt(rendRealCDB)}/mês</div><div class="sim-card-sub">descontada inflação</div></div>
+  `;
+
+  const badge = document.getElementById('meta-passiva-badge');
+  if(badge){
+    const pct = Math.round((rendCDB / meta) * 100);
+    const capitalMeta = Math.ceil(meta * 12 / cdi / 0.90);
+    badge.innerHTML = `<div class="meta-badge"><span class="meta-badge-txt">META R$7.800/mês → ${pct}% atingido · capital necessário: R$${Math.round(capitalMeta/1000)}k</span></div>`;
+  }
 }
 
 </script>
