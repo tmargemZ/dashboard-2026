@@ -594,7 +594,21 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 <div class="footer">[ SHADOW MONARCH SYSTEM · 2026 · DADOS SALVOS LOCALMENTE ]</div>
 </div>
 
-<script>
+<script>const PIN = '9061';
+let pinBuffer = '';
+let investUnlocked = false;
+
+const UPCOMING_GAMES = [
+  {title:'Pragmata',date:'2026-04-17',icon:'🎮'},
+  {title:'Mouse: P.I. for Hire',date:'2026-04-16',icon:'🎮'},
+  {title:'Tomodachi Life: Living the Dream',date:'2026-04-16',icon:'🎮'},
+  {title:'Yoshi and the Mysterious Book',date:'2026-05-21',icon:'🍃'},
+  {title:'The Duskbloods (FromSoftware)',date:'2026-12-31',icon:'⚔️'},
+  {title:'Fire Emblem: Fortune Weave',date:'2026-12-31',icon:'🔥'},
+];
+
+
+
 const GOALS_DEF=[
   {key:'casamento',icon:'💍',label:'Assinar casamento',sub:'essa semana · Nathália',done:true},
   {key:'clt',icon:'💼',label:'Emprego CLT',sub:'Senior Marketing'},
@@ -921,11 +935,6 @@ fetchClima();
 renderCountdown();
 fetchMacro();
 
-// ── PIN / INVEST ──────────────────────────────────────────────────
-const PIN = '9061';
-let pinBuffer = '';
-let investUnlocked = false;
-
 function pinKey(d){
   if(pinBuffer.length >= 4) return;
   pinBuffer += d;
@@ -988,7 +997,6 @@ function renderLinkedinPreview(vagas){
   `).join('');
 }
 
-
 // ── CLIMA ─────────────────────────────────────────────────────────
 async function fetchClimaCoords(lat, lon, label){
   const icons = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',61:'🌧',71:'🌨',80:'🌦',95:'⛈'};
@@ -1034,14 +1042,6 @@ async function fetchClimaFallback(){
 }
 
 // ── GAMES COUNTDOWN ───────────────────────────────────────────────
-const UPCOMING_GAMES = [
-  {title:'Pragmata',date:'2026-04-17',icon:'🎮'},
-  {title:'Mouse: P.I. for Hire',date:'2026-04-16',icon:'🎮'},
-  {title:'Tomodachi Life: Living the Dream',date:'2026-04-16',icon:'🎮'},
-  {title:'Yoshi and the Mysterious Book',date:'2026-05-21',icon:'🍃'},
-  {title:'The Duskbloods (FromSoftware)',date:'2026-12-31',icon:'⚔️'},
-  {title:'Fire Emblem: Fortune Weave',date:'2026-12-31',icon:'🔥'},
-];
 
 function renderCountdown(){
   const el = document.getElementById('games-countdown');
